@@ -1,0 +1,43 @@
+{
+  "name": "@flecoufle/node-red-linky",
+  "version": "0.1.0",
+  "description": "Retrieve Linky power consumption",
+  "main": "linky.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=10.19.0"
+  },
+  "contributors": [
+    {
+      "name": "François Lecoufle"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flecoufle/node-red-linky.git"
+  },
+  "node-red": {
+    "version": ">=0.17.0",
+    "nodes": {
+      "linky-api": "linky/linky.js"
+    }
+  },
+  "keywords": [
+    "linky",
+    "node-red",
+    "power",
+    "consumption",
+    "production"
+  ],
+  "author": "François Lecoufle",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/flecoufle/node-red-linky/issues"
+  },
+  "homepage": "https://github.com/flecoufle/node-red-linky#readme",
+  "dependencies": {
+    "got": "^11.8.6"
+  }
+}
