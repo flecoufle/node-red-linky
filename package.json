@@ -2,7 +2,7 @@
   "name": "@flecoufle/node-red-linky",
   "version": "0.1.3",
   "description": "Retrieve Linky power consumption",
-  "main": "linky.js",
+  "main": "linky/linky.js",
   "publishConfig": {
     "access": "public"
   },
