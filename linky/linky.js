@@ -120,13 +120,13 @@ module.exports = function (RED) {
                     if (err instanceof got.HTTPError) {
                         node.warn(request);
                         if (err.response.statusCode == '400') {
-                            node.error('Bad request: Check token and PRM');
+                            node.error('Bad request: Check token and PRM or dates format');
                         } else if (err.response.statusCode == '401') {
                             node.error('Unauthorized: Check token and PRM');
                         } else if (err.response.statusCode == '403') {
                             node.error('Forbidden: Check token and PRM');
                         } else if (err.response.statusCode == '404') {
-                            node.error('Not found: Check token and PRM');
+                            node.error('Not found: Check token and PRM or dates values');
                         }
                     } else if (err instanceof got.TimeoutError) {
                         node.warn('TimeoutError: adjust payload.options_timeout_*');
