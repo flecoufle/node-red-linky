@@ -1,0 +1,183 @@
+[{
+    "id": "367182d9cecf647a",
+    "type": "inject",
+    "z": "cd10dd842a97a44c",
+    "name": "daily_consumption",
+    "props": [{
+        "p": "payload"
+    }],
+    "repeat": "86400",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"type\":\"daily_consumption\",\"start\":\"\",\"end\":\"\"}",
+    "payloadType": "json",
+    "x": 140,
+    "y": 40,
+    "wires": [
+        ["7769e3ca14319a80"]
+    ]
+}, {
+    "id": "ab4116184bd72d25",
+    "type": "inject",
+    "z": "cd10dd842a97a44c",
+    "name": "consumption_load_curve",
+    "props": [{
+        "p": "payload"
+    }],
+    "repeat": "86400",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"type\":\"consumption_load_curve\",\"start\":\"\",\"end\":\"\"}",
+    "payloadType": "json",
+    "x": 160,
+    "y": 80,
+    "wires": [
+        ["7769e3ca14319a80"]
+    ]
+}, {
+    "id": "5a15b8c4c5d6e307",
+    "type": "linky-api",
+    "z": "cd10dd842a97a44c",
+    "name": "",
+    "prm": "",
+    "token": "",
+    "x": 550,
+    "y": 100,
+    "wires": [
+        ["ccc3a7921bb1af33"]
+    ]
+}, {
+    "id": "7769e3ca14319a80",
+    "type": "function",
+    "z": "cd10dd842a97a44c",
+    "name": "day before",
+    "func": "var date = new Date();\n// today\nconst end = date.toISOString().substring(0, 10);\n// yesterday\ndate.setDate(date.getDate() - 1);\nconst start = date.toISOString().substring(0, 10);\nvar _p = msg.payload;\n_p.start = start;\n_p.end = end;\nreturn { \"payload\" : _p};",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 410,
+    "y": 100,
+    "wires": [
+        ["5a15b8c4c5d6e307"]
+    ]
+}, {
+    "id": "6e10f26c3e172266",
+    "type": "debug",
+    "z": "cd10dd842a97a44c",
+    "name": "results",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 730,
+    "y": 160,
+    "wires": []
+}, {
+    "id": "ccc3a7921bb1af33",
+    "type": "change",
+    "z": "cd10dd842a97a44c",
+    "name": "",
+    "rules": [{
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "payload.interval_reading",
+        "tot": "msg"
+    }],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 700,
+    "y": 100,
+    "wires": [
+        ["49a7987a56abd63c"]
+    ]
+}, {
+    "id": "49a7987a56abd63c",
+    "type": "split",
+    "z": "cd10dd842a97a44c",
+    "name": "",
+    "splt": "\\n",
+    "spltType": "str",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "stream": false,
+    "addname": "",
+    "x": 610,
+    "y": 160,
+    "wires": [
+        ["6e10f26c3e172266"]
+    ]
+}, {
+    "id": "c688ce4b945b7b32",
+    "type": "inject",
+    "z": "cd10dd842a97a44c",
+    "name": "consumption_max_power",
+    "props": [{
+        "p": "payload"
+    }],
+    "repeat": "86400",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"type\":\"consumption_max_power\",\"start\":\"\",\"end\":\"\"}",
+    "payloadType": "json",
+    "x": 160,
+    "y": 120,
+    "wires": [
+        ["7769e3ca14319a80"]
+    ]
+}, {
+    "id": "f4a2f5074f259628",
+    "type": "inject",
+    "z": "cd10dd842a97a44c",
+    "name": "daily_production",
+    "props": [{
+        "p": "payload"
+    }],
+    "repeat": "86400",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"type\":\"daily_production\",\"start\":\"\",\"end\":\"\"}",
+    "payloadType": "json",
+    "x": 130,
+    "y": 180,
+    "wires": [
+        ["7769e3ca14319a80"]
+    ]
+}, {
+    "id": "bf71579a77b94f59",
+    "type": "inject",
+    "z": "cd10dd842a97a44c",
+    "name": "production_load_curve",
+    "props": [{
+        "p": "payload"
+    }],
+    "repeat": "86400",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"type\":\"production_load_curve\",\"start\":\"\",\"end\":\"\"}",
+    "payloadType": "json",
+    "x": 150,
+    "y": 220,
+    "wires": [
+        ["7769e3ca14319a80"]
+    ]
+}]
