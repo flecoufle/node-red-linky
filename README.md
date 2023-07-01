@@ -1,7 +1,12 @@
 # node-red-linky
 Retreive linky power consumption and production from <a href="https://github.com/bokub/conso-api#readme">bokub/conso-api</a>
 
-See Enedis documentation on <a href="https://datahub-enedis.fr/services-api/data-connect/documentation/">data-connect</a>
+See Enedis API documentation on <a href="https://datahub-enedis.fr/services-api/data-connect/documentation/">data-connect</a>
+
+Note this package needs to use an older version of got, need help to use <b>got 12</b> (native ESM), feel free to submit a PR<br/>
+<code>
+    "got": "^11.X.X"
+</code>
 
 ## consumption usage
 - <b>Récupération de la consommation énergétique quotidienne</b>: <code>daily_consumption</code>
