@@ -21,8 +21,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 "use strict";
 
-module.exports = function (RED) {
-    const got = require('got');
+module.exports = async function (RED) {
+    const { got } = await import('got');
 
     const nodeStatus = {
         WAIT: "Waiting...",
