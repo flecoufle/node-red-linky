@@ -3,10 +3,10 @@ Copyright 2023, François Lecoufle
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files(the "Software"), to deal in
-    the Software without restriction, including without limitation the rights to
+the Software without restriction, including without limitation the rights to
 use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies of
 the Software, and to permit persons to whom the Software is furnished to do so,
-    subject to the following conditions:
+subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
@@ -20,23 +20,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 <script type="text/javascript">
-    RED.nodes.registerType('linky-api',{
+    RED.nodes.registerType('linky-api', {
         category: 'linky',
         color: '#a6bbcf',
         defaults: {
-            name: {value: "", required: false},
-            prm: {value: "", required: false},
-            token: {value: "", required: false}
+            name: { value: "", required: false },
+            config: { value: "", required: false, type: "linky-api-config" },
+            prm: { value: "", required: false },
+            token: { value: "", required: false }
         },
         credentials: {
-            prm: {type: "text"},
-            token: {type: "password"}
+            prm: { type: "text" },
+            token: { type: "password" }
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 1,
         icon: 'font-awesome/fa-tachometer',
-        paletteLabel:'linky',
-        label: function() {
+        paletteLabel: 'linky',
+        label: function () {
             return this.name || "linky";
         }
     });
@@ -45,15 +46,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <script type="text/html" data-template-name="linky-api">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-globe"></i> Config</label>
+        <input type="text" id="node-input-config">
     </div>
     <div class="form-row">
         <label for="node-input-token"><i class="fa fa-lock"></i> Token</label>
-        <input type="password" id="node-input-token" placeholder="Your token or in payload"/>
+        <input type="password" id="node-input-token" placeholder="your token or in payload"/>
     </div>
     <div class="form-row">
         <label for="node-input-prm"><i class="fa fa-wave-pulse"></i> PRM</label>
-        <input type="text" id="node-input-prm" placeholder="Your PRM or in payload"/>
+        <input type="text" id="node-input-prm" placeholder="your PRM or in payload"/>
     </div>
 </script>
 
