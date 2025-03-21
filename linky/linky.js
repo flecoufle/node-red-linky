@@ -53,7 +53,8 @@ module.exports = async function (RED) {
                 "options_timeout_send": msg.payload?.options_timeout_send || 10000,
                 "options_timeout_response": msg.payload?.options_timeout_response || 10000,
                 "random_delay": msg.payload?.random_delay || 5000,
-                "endpoint": msg.payload?.endpoint || 'https://conso.boris.sh/api/'
+                "endpoint": msg.payload?.endpoint || 'https://conso.boris.sh/api/',
+                "debug": msg.payload?.debug === true || msg.payload?.debug == "true"
             }
 
             const options = {
@@ -77,19 +78,41 @@ module.exports = async function (RED) {
                 }
             };
 
-            _p.type || node.error('api type not set (ex. daily_consumption) see documentation');
-            _p.token || node.error('token not set');
-            _p.prm || node.error('PRM not set');
-            _p.start || node.error('start not set');
-            _p.end || node.error('end not set');
+            !_p.type ? (done ? done('api type not set (ex. daily_consumption) see documentation') : node.error('api type not set (ex. daily_consumption) see documentation')) : null;
+            !_p.token ? (done ? done('token not set') : node.error('token not set')) : null;
+            !_p.prm ? (done ? done('PRM not set') : node.error('PRM not set')) : null;
+            !_p.start ? (done ? done('start not set') : node.error('start not set')) : null;
+            !_p.end ? (done ? done('end not set') : node.error('end not set')) : null;
+
             if (_p.type && _p.token && _p.prm && _p.start && _p.end) {
                 let wait = Math.floor(Math.random() * _p.random_delay);
                 let msg_wait = nodeStatus.WAIT + Math.ceil(wait / 1000) + 's';
                 node.status({ fill: 'grey', shape: 'ring', text: msg_wait });
                 setTimeout(() => {
                     node.status({ fill: 'grey', shape: 'ring', text: nodeStatus.FETCH });
-                    let request = `${_p.endpoint}${_p.type}?prm=${_p.prm}&start=${_p.start}&end=${_p.end}`;
-                    got(request, options)
+                    let request;
+                    try {
+                        let url = new URL(_p.endpoint);
+                        url.pathname += _p.type;
+                        url.search = new URLSearchParams({
+                            prm: _p.prm,
+                            start: _p.start,
+                            end: _p.end
+                        }).toString();
+                        request = url.toString();
+                    } catch (err) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'error' });
+                        if (done) {
+                            done('url ' + err);
+                        } else {
+                            node.error('url ' + err);
+                        }
+                    }
+
+                    _p.debug && request && node.warn('Request URL:' + request);
+                    _p.debug && options && node.warn('Options:' + JSON.stringify(options));
+
+                    request && options && got(request, options)
                         .then(res => {
                             if (res.statusCode == '200') {
                                 try {
@@ -122,7 +145,7 @@ module.exports = async function (RED) {
                         })
                         .catch(err => {
                             node.status({ fill: 'red', shape: 'ring', text: 'error' });
-        
+
                             if (done) {
                                 done(err);
                             } else {
