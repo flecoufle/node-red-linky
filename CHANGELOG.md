@@ -1,3 +1,6 @@
+## 1.3.0 - 20250321
+add debug option
+
 ## 1.2.0 - 20240705
 add config node
 fix error handler
