@@ -109,7 +109,8 @@ Cette fonctionnalité permet d'éviter le blocage d'IP, voir "Conseils d'utilisa
   - L'endpoint API (`endpoint`)
   - Les configurations de timeout
   - La limite de retry
-Donc tout sauf `debug`
+  
+  Donc tout sauf `debug`
 
 - **Réinitialisation automatique**: Le compteur se réinitialise automatiquement chaque jour à minuit
 
@@ -118,4 +119,4 @@ Donc tout sauf `debug`
 - **Appel réussi**: La réponse est automatiquement mise en cache avec la signature de la requête
 - **Limite atteinte**:
   - Une réponse en cache est retournée (statut du noeud: **jaune**)
-  - Si aucune réponse n'a pu être mis en cache (statut du noeud: **rouge**) cas de l'API en erreurs successives "_Daily limit of X calls for this request reached. No cache available._" sera affiché dans le log
+  - Si aucune réponse n'a pu être mise en cache (statut du noeud: **rouge**) cas de l'API en erreurs successives "_Daily limit of X calls for this request reached. No cache available._" sera affiché dans le log
