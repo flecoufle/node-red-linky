@@ -1,3 +1,6 @@
+## 1.4.1 - 20260125
+add publishConfig registry
+
 ## 1.4.0 - 20260124
 add options_api_daily_limit
 
