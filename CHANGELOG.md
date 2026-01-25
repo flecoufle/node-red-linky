@@ -1,3 +1,6 @@
+## 1.4.2 - 20260125
+github action
+
 ## 1.4.1 - 20260125
 add publishConfig registry
 
