@@ -108,17 +108,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 "prm": PRM set in payload or in node property
 "start": start date in RFC 3339 format ("YYYY-MM-DD")
 "end": end date in RFC 3339 format ("YYYY-MM-DD")
-"options_retry_limit": got option in ms(default 2)
+"options_api_daily_limit": daily limit of calls for identical request (default 3)
+"options_retry_limit": got option (default 2)
 "options_timeout_lookup": got option in ms(default 500)
 "options_timeout_connect": got option in ms(default 500)
 "options_timeout_secureconnect": got option in ms(default 500) 
 "options_timeout_socket": got option in ms(default 5000)
-"options_timeout_send": got option in ms(default 1000)
-"options_timeout_response": got option in ms(default 1000)
+"options_timeout_send": got option in ms(default 10000)
+"options_timeout_response": got option in ms(default 10000)
 "random_delay": fetch after a random delay in ms (default 5000)
 "endpoint": endpoint api (default "https://conso.boris.sh/api/")
 "debug": debug mode (default false)
 </code></pre></p>
+        <p><strong>🔄 Système de Cache:</strong> Les réponses réussies sont automatiquement mises en cache. Si la limite quotidienne est atteinte pour une requête identique, la réponse en cache est retournée (statut jaune) au lieu d'une erreur.</p>
         Available types are: <code>"daily_consumption"</code>, <code>"consumption_load_curve"</code>, <code>"consumption_max_power"</code> in consumption<br/>
         <code>"daily_production"</code>, <code>"production_load_curve"</code> in production
     </dl>
