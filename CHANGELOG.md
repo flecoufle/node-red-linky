@@ -1,3 +1,6 @@
+## 1.4.0 - 20260124
+add options_api_daily_limit
+
 ## 1.3.0 - 20250321
 add debug option
 
