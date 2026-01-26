@@ -1,3 +1,6 @@
+## 1.4.3 - 20260126
+clean cache in options_api_daily_limit
+
 ## 1.4.2 - 20260125
 github action
 

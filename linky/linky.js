@@ -115,6 +115,15 @@ module.exports = async function (RED) {
         node.config = RED.nodes.getNode(config.config);
 
         node.on('input', function (msg, send, done) {
+            // Nettoyage du cache et de l'historique si changement de jour
+            const today = getTodayKey();
+            const cacheDate = node.context().get('cacheDate');
+            if (cacheDate !== today) {
+                node.context().set('responseCache', {});
+                node.context().set('requestHistory', {});
+                node.context().set('cacheDate', today);
+            }
+
             const _p = {
                 "type": msg.payload?.type || '',
                 "token": msg.payload?.token || node.credentials?.token || node.config?.token || '',

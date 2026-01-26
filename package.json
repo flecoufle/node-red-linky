@@ -1,6 +1,6 @@
 {
   "name": "@flecoufle/node-red-linky",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Récupérer de Linky les données de consommation et production d'énergie via l'API Enedis",
   "main": "linky/linky.js",
   "publishConfig": {
@@ -30,8 +30,19 @@
     "api",
     "node-red",
     "power",
+    "energy",
+    "energie",
     "consumption",
-    "production"
+    "consommation",
+    "production",
+    "enedis",
+    "electricity",
+    "electricite",
+    "meter",
+    "compteur",
+    "iot",
+    "domotique",
+    "smart-meter"
   ],
   "author": "François Lecoufle",
   "license": "GPL-3.0-or-later",
