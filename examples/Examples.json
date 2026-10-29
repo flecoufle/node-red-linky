@@ -1,183 +1,276 @@
-[{
-    "id": "367182d9cecf647a",
-    "type": "inject",
-    "z": "cd10dd842a97a44c",
-    "name": "daily_consumption",
-    "props": [{
-        "p": "payload"
-    }],
-    "repeat": "86400",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"type\":\"daily_consumption\",\"start\":\"\",\"end\":\"\"}",
-    "payloadType": "json",
-    "x": 140,
-    "y": 40,
-    "wires": [
-        ["7769e3ca14319a80"]
-    ]
-}, {
-    "id": "ab4116184bd72d25",
-    "type": "inject",
-    "z": "cd10dd842a97a44c",
-    "name": "consumption_load_curve",
-    "props": [{
-        "p": "payload"
-    }],
-    "repeat": "86400",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"type\":\"consumption_load_curve\",\"start\":\"\",\"end\":\"\"}",
-    "payloadType": "json",
-    "x": 160,
-    "y": 80,
-    "wires": [
-        ["7769e3ca14319a80"]
-    ]
-}, {
-    "id": "5a15b8c4c5d6e307",
-    "type": "linky-api",
-    "z": "cd10dd842a97a44c",
-    "name": "",
-    "prm": "",
-    "token": "",
-    "x": 550,
-    "y": 100,
-    "wires": [
-        ["ccc3a7921bb1af33"]
-    ]
-}, {
-    "id": "7769e3ca14319a80",
-    "type": "function",
-    "z": "cd10dd842a97a44c",
-    "name": "day before",
-    "func": "var date = new Date();\n// today\nconst end = date.toISOString().substring(0, 10);\n// yesterday\ndate.setDate(date.getDate() - 1);\nconst start = date.toISOString().substring(0, 10);\nvar _p = msg.payload;\n_p.start = start;\n_p.end = end;\nreturn { \"payload\" : _p};",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 410,
-    "y": 100,
-    "wires": [
-        ["5a15b8c4c5d6e307"]
-    ]
-}, {
-    "id": "6e10f26c3e172266",
-    "type": "debug",
-    "z": "cd10dd842a97a44c",
-    "name": "results",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "payload",
-    "targetType": "msg",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 730,
-    "y": 160,
-    "wires": []
-}, {
-    "id": "ccc3a7921bb1af33",
-    "type": "change",
-    "z": "cd10dd842a97a44c",
-    "name": "",
-    "rules": [{
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "payload.interval_reading",
-        "tot": "msg"
-    }],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 700,
-    "y": 100,
-    "wires": [
-        ["49a7987a56abd63c"]
-    ]
-}, {
-    "id": "49a7987a56abd63c",
-    "type": "split",
-    "z": "cd10dd842a97a44c",
-    "name": "",
-    "splt": "\\n",
-    "spltType": "str",
-    "arraySplt": 1,
-    "arraySpltType": "len",
-    "stream": false,
-    "addname": "",
-    "x": 610,
-    "y": 160,
-    "wires": [
-        ["6e10f26c3e172266"]
-    ]
-}, {
-    "id": "c688ce4b945b7b32",
-    "type": "inject",
-    "z": "cd10dd842a97a44c",
-    "name": "consumption_max_power",
-    "props": [{
-        "p": "payload"
-    }],
-    "repeat": "86400",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"type\":\"consumption_max_power\",\"start\":\"\",\"end\":\"\"}",
-    "payloadType": "json",
-    "x": 160,
-    "y": 120,
-    "wires": [
-        ["7769e3ca14319a80"]
-    ]
-}, {
-    "id": "f4a2f5074f259628",
-    "type": "inject",
-    "z": "cd10dd842a97a44c",
-    "name": "daily_production",
-    "props": [{
-        "p": "payload"
-    }],
-    "repeat": "86400",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"type\":\"daily_production\",\"start\":\"\",\"end\":\"\"}",
-    "payloadType": "json",
-    "x": 130,
-    "y": 180,
-    "wires": [
-        ["7769e3ca14319a80"]
-    ]
-}, {
-    "id": "bf71579a77b94f59",
-    "type": "inject",
-    "z": "cd10dd842a97a44c",
-    "name": "production_load_curve",
-    "props": [{
-        "p": "payload"
-    }],
-    "repeat": "86400",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"type\":\"production_load_curve\",\"start\":\"\",\"end\":\"\"}",
-    "payloadType": "json",
-    "x": 150,
-    "y": 220,
-    "wires": [
-        ["7769e3ca14319a80"]
-    ]
-}]
+[
+    {
+        "id": "b025fdd7927c3216",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "consommation_quotidienne",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"consommation_quotidienne\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "72802f5cafbada78",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "courbe_de_charge_consommation",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"courbe_de_charge_consommation\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 40,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "745fc3e728867853",
+        "type": "linky-api",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "prm": "",
+        "token": "",
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "a1b2c3d4e5f60718"
+            ]
+        ]
+    },
+    {
+        "id": "2c8b8ead22da467e",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "day before",
+        "func": "var date = new Date();\n// today (exclusive end date)\nconst dateFin = date.toISOString().substring(0, 10);\n// yesterday (inclusive start date)\ndate.setDate(date.getDate() - 1);\nconst dateDebut = date.toISOString().substring(0, 10);\nvar _p = msg.payload;\n_p.dateDebut = dateDebut;\n_p.dateFin = dateFin;\nreturn { \"payload\" : _p};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 160,
+        "wires": [
+            [
+                "745fc3e728867853"
+            ]
+        ]
+    },
+    {
+        "id": "a1b2c3d4e5f60718",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "index or series",
+        "func": "const p = msg.payload || {};\n// Les types index_* exposent leurs series dans payload.contexte[].grandeur[]\nif (Array.isArray(p.contexte) && p.contexte.length > 0) {\n    return [msg, null];\n}\nreturn [null, msg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 160,
+        "wires": [
+            [
+                "b2c3d4e5f6071829"
+            ],
+            [
+                "c3d4e5f607182930"
+            ]
+        ]
+    },
+    {
+        "id": "b2c3d4e5f6071829",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "index (contexte[].grandeur[])",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.contexte[0].grandeur",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1020,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "c3d4e5f607182930",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "series (grandeur[].points[])",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.grandeur[0].points",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "6da492a6b9d3d7d1",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "puissance_conso_max_quotidienne",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"puissance_conso_max_quotidienne\",\"dateDebut\":\"\",\"dateFin\":\"\",\"mesuresPas\":\"P1D\",\"grandeurPhysique\":\"PMA\"}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 120,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "ed7d511f10a4ff35",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "production_quotidienne",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"production_quotidienne\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "30a1bbf4b1d6d571",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "courbe_de_charge_production",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"courbe_de_charge_production\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "db7d02b967a5c959",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "index_consommation",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"index_consommation\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "403ddc484e3f01b9",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "index_production",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"index_production\",\"dateDebut\":\"\",\"dateFin\":\"\"}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "2c8b8ead22da467e"
+            ]
+        ]
+    },
+    {
+        "id": "b4e0d02a443a407d",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flecoufle/node-red-linky": "1.5.0"
+        }
+    }
+]
