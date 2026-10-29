@@ -1,0 +1,46 @@
+# Development stack for @flecoufle/node-red-linky.
+# The repo is bind-mounted into Node-RED's node_modules so it loads exactly
+# like a palette-managed install. All npm tooling runs in the "tools" image.
+
+name: node-red-linky
+
+services:
+  node-red:
+    image: ${NR_IMAGE:-nodered/node-red:4.1.17-22}
+    init: true
+    restart: unless-stopped
+    ports:
+      - "${NR_PORT:-1880}:1880"
+    environment:
+      TZ: ${NR_TZ:-Europe/Paris}
+      FLOWS: ${NR_FLOWS:-flows.json}
+      NODE_OPTIONS: ${NR_NODE_OPTIONS:-}
+    volumes:
+      - node-red-data:/data
+      - ./:/data/node_modules/${MODULE_NAME:-@flecoufle/node-red-linky}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    stop_grace_period: 10s
+
+  tools:
+    image: ${NODE_IMAGE:-node:22-bookworm-slim}
+    profiles: ["tools"]
+    init: true
+    working_dir: /app
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      HOME: /tmp
+      npm_config_cache: /tmp/npm-cache
+      npm_config_update_notifier: "false"
+      npm_config_fund: "false"
+      npm_config_audit: "false"
+    volumes:
+      - ./:/app
+    command: ["sleep", "infinity"]
+
+volumes:
+  node-red-data:

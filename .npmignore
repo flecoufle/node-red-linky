@@ -17,3 +17,11 @@ node_modules
 .env
 .vscode
 .github
+
+# Development stack (not part of the published package)
+TODO.md
+Makefile
+compose.yaml
+.env.example
+.make
+.gitignore

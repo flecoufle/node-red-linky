@@ -1,6 +1,6 @@
 {
   "name": "@flecoufle/node-red-linky",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "Récupérer de Linky les données de consommation et production d'énergie via l'API Enedis",
   "main": "linky/linky.js",
   "publishConfig": {
