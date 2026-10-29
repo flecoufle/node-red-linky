@@ -6,6 +6,11 @@ options mesuresPas (P1D/P1M) et grandeurPhysique (PMA/TOUT) pour la puissance ma
 changement du format de réponse: payload.grandeur[].points[] (au lieu de payload.interval_reading)
 header Accept, erreurs HTTP avec corps de réponse, cache cloné
 fix lecture du token et du PRM saisis directement dans le noeud
+validation locale: PRM sur 14 chiffres, dateDebut < dateFin, courbes de charge limitees a 7 jours
+normalisation des espaces (token, PRM, dates, endpoint) et du slash final de l'endpoint
+avertissement lorsque le token est stocke en clair dans flows.json
+tests automatises (node:test + mock HTTP) et workflow CI
+correction des exemples index_* (payload.contexte[].grandeur[]) et section depannage
 
 ## 1.4.3 - 20260126
 clean cache in options_api_daily_limit

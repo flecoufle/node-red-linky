@@ -53,6 +53,13 @@ module.exports = async function (RED) {
     const MEASURE_STEPS = new Set(['P1D', 'P1M']);
     const PHYSICAL_QUANTITIES = new Set(['PMA', 'TOUT']);
     const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+    const PRM_PATTERN = /^\d{14}$/;
+    const LOAD_CURVE_TYPES = new Set([
+        'courbe_de_charge_consommation',
+        'courbe_de_charge_production'
+    ]);
+    const LOAD_CURVE_MAX_DAYS = 7;
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
     // Fonction pour obtenir la clé du jour (YYYY-MM-DD)
     function getTodayKey() {
@@ -62,6 +69,18 @@ module.exports = async function (RED) {
     // Retourne la première valeur définie et non vide
     function firstDefined(...values) {
         return values.find(value => value !== undefined && value !== null && value !== '');
+    }
+
+    // Normalise une valeur texte (espaces superflus, slash final de l'endpoint)
+    function normalizeText(value, stripTrailingSlash = false) {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        let text = String(value).trim();
+        if (stripTrailingSlash) {
+            text = text.replace(/\/+$/, '');
+        }
+        return text;
     }
 
     // Convertit une option numérique sans casser les valeurs absentes
@@ -88,12 +107,12 @@ module.exports = async function (RED) {
 
         return {
             type,
-            token: firstDefined(payload.token, node.credentials?.token, node.config?.token, node.token) || '',
-            pointId: firstDefined(payload.pointId, payload.prm, node.credentials?.prm, node.config?.prm, node.prm) || '',
-            dateDebut: firstDefined(payload.dateDebut, payload.start) || '',
-            dateFin: firstDefined(payload.dateFin, payload.end) || '',
-            mesuresPas: isMaxPower ? firstDefined(payload.mesuresPas) || 'P1D' : undefined,
-            grandeurPhysique: isMaxPower ? firstDefined(payload.grandeurPhysique) || 'PMA' : undefined,
+            token: normalizeText(firstDefined(payload.token, node.credentials?.token, node.config?.token, node.token)),
+            pointId: normalizeText(firstDefined(payload.pointId, payload.prm, node.credentials?.prm, node.config?.prm, node.prm)),
+            dateDebut: normalizeText(firstDefined(payload.dateDebut, payload.start)),
+            dateFin: normalizeText(firstDefined(payload.dateFin, payload.end)),
+            mesuresPas: isMaxPower ? normalizeText(firstDefined(payload.mesuresPas)) || 'P1D' : undefined,
+            grandeurPhysique: isMaxPower ? normalizeText(firstDefined(payload.grandeurPhysique)) || 'PMA' : undefined,
             options_api_daily_limit: toNumber(payload.options_api_daily_limit, 3),
             options_retry_limit: toNumber(payload.options_retry_limit, 2),
             options_timeout_lookup: toNumber(payload.options_timeout_lookup, 500),
@@ -103,7 +122,7 @@ module.exports = async function (RED) {
             options_timeout_send: toNumber(payload.options_timeout_send, 10000),
             options_timeout_response: toNumber(payload.options_timeout_response, 10000),
             random_delay: toNumber(payload.random_delay, 5000),
-            endpoint: payload.endpoint || 'https://conso.boris.sh/api/',
+            endpoint: normalizeText(firstDefined(payload.endpoint), true) || 'https://conso.boris.sh/api',
             debug: String(payload.debug).toLowerCase() === "true"
         };
     }
@@ -121,6 +140,9 @@ module.exports = async function (RED) {
         if (!params.pointId) {
             return 'pointId/PRM not set';
         }
+        if (!PRM_PATTERN.test(params.pointId)) {
+            return 'pointId/PRM must contain 14 digits';
+        }
         if (!params.dateDebut) {
             return 'dateDebut/start not set';
         }
@@ -132,6 +154,24 @@ module.exports = async function (RED) {
         }
         if (!DATE_PATTERN.test(params.dateFin)) {
             return 'dateFin/end must use YYYY-MM-DD format';
+        }
+
+        const startTime = Date.parse(params.dateDebut);
+        const endTime = Date.parse(params.dateFin);
+        if (Number.isNaN(startTime)) {
+            return 'dateDebut/start is not a valid date';
+        }
+        if (Number.isNaN(endTime)) {
+            return 'dateFin/end is not a valid date';
+        }
+        if (startTime >= endTime) {
+            return 'dateDebut/start must be before dateFin/end';
+        }
+        if (LOAD_CURVE_TYPES.has(params.type) && (endTime - startTime) > LOAD_CURVE_MAX_DAYS * MS_PER_DAY) {
+            return `load curve requests are limited to ${LOAD_CURVE_MAX_DAYS} days`;
+        }
+        if (!params.endpoint) {
+            return 'endpoint not set';
         }
         if (isMaxPowerType(params.type)) {
             if (!MEASURE_STEPS.has(params.mesuresPas)) {

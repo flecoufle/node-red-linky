@@ -60,7 +60,7 @@
         "y": 160,
         "wires": [
             [
-                "9dcfb847b3957d6d"
+                "a1b2c3d4e5f60718"
             ]
         ]
     },
@@ -84,20 +84,60 @@
         ]
     },
     {
-        "id": "9dcfb847b3957d6d",
+        "id": "a1b2c3d4e5f60718",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "index or series",
+        "func": "const p = msg.payload || {};\n// Les types index_* exposent leurs series dans payload.contexte[].grandeur[]\nif (Array.isArray(p.contexte) && p.contexte.length > 0) {\n    return [msg, null];\n}\nreturn [null, msg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 160,
+        "wires": [
+            [
+                "b2c3d4e5f6071829"
+            ],
+            [
+                "c3d4e5f607182930"
+            ]
+        ]
+    },
+    {
+        "id": "b2c3d4e5f6071829",
         "type": "debug",
         "z": "f6f2187d.f17ca8",
-        "name": "results",
+        "name": "index (contexte[].grandeur[])",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "payload.contexte[0].grandeur",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 730,
-        "y": 160,
+        "x": 1020,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "c3d4e5f607182930",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "series (grandeur[].points[])",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.grandeur[0].points",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 200,
         "wires": []
     },
     {

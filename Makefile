@@ -110,7 +110,7 @@ outdated: ## Show outdated dependencies
 lint: install ## Run the linter (no-op until a lint script exists)
 	@$(COMPOSE_TOOLS) run --rm $(TOOLS) npm run lint --if-present
 
-test: install ## Run tests (no-op until a test script exists)
+test: install ## Run tests
 	@$(COMPOSE_TOOLS) run --rm $(TOOLS) npm run test --if-present
 
 check: lint test ## Run lint + tests

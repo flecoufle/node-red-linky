@@ -61,6 +61,25 @@ Pour les utilisateurs des versions antérieures: **veuillez mettre à jour** pou
 | `endpoint` | string | https://conso.boris.sh/api/ | Endpoint API à utiliser |
 | `debug` | boolean | false | Afficher les détails de débogage dans les logs |
 
+### Priorité du token et du PRM
+
+Les valeurs sont recherchées dans cet ordre, la première valeur non vide gagnant :
+
+1. `payload.token` / `payload.pointId` (ou `payload.prm`)
+2. Credentials Node-RED du noeud
+3. Noeud de configuration `linky-api-config`
+
+### Validation locale
+
+Avant chaque appel, le noeud vérifie :
+
+- le PRM contient exactement **14 chiffres** ;
+- les dates utilisent le format `YYYY-MM-DD` et `dateDebut` est strictement antérieure à `dateFin` ;
+- les courbes de charge (`courbe_de_charge_*`) couvrent au maximum **7 jours** ;
+- les options `mesuresPas` et `grandeurPhysique` pour la puissance max.
+
+Une requête invalide est rejetée sans consommer le quota API.
+
 ## Types d'API disponibles
 
 Les types ci-dessous correspondent à l'API **Mesure synchrone V2**. La date de fin (`dateFin`) est exclue.
@@ -106,11 +125,11 @@ Les anciens types *Metering data V5* restent acceptés comme alias et sont tradu
 
 | Ancien type (V5) | Nouveau type (V2) |
 |---|---|
-| `daily_consumption` | `consommation_quotidienne` |
-| `consumption_load_curve` | `courbe_de_charge_consommation` |
-| `consumption_max_power` | `puissance_conso_max_quotidienne` |
-| `daily_production` | `production_quotidienne` |
-| `production_load_curve` | `courbe_de_charge_production` |
+| `daily_consumption`      | `consommation_quotidienne`        |
+| `consumption_load_curve` | `courbe_de_charge_consommation`   |
+| `consumption_max_power`  | `puissance_conso_max_quotidienne` |
+| `daily_production`       | `production_quotidienne`          |
+| `production_load_curve`  | `courbe_de_charge_production`     |
 
 Les anciens noms de paramètres `prm`, `start` et `end` sont également acceptés en repli de `pointId`, `dateDebut` et `dateFin`.
 
@@ -173,7 +192,9 @@ Cette fonctionnalité permet d'éviter le blocage d'IP, voir "Conseils d'utilisa
   
   Donc tout sauf `debug`
 
-- **Réinitialisation automatique**: Le compteur se réinitialise automatiquement chaque jour à minuit
+- **Réinitialisation automatique**: Le compteur se réinitialise automatiquement chaque jour à minuit UTC
+
+> Le cache et les compteurs sont stockés dans le contexte du noeud, **en mémoire** avec le context store `memory` par défaut de Node-RED. Ils sont donc perdus au redémarrage de Node-RED, et le quota est recalculé à partir de zéro.
 
 ### Comportement avec cache
 
@@ -181,6 +202,21 @@ Cette fonctionnalité permet d'éviter le blocage d'IP, voir "Conseils d'utilisa
 - **Limite atteinte**:
   - Une réponse en cache est retournée (statut du noeud: **jaune**)
   - Si aucune réponse n'a pu être mise en cache (statut du noeud: **rouge**) cas de l'API en erreurs successives "_Daily limit of X calls for this request reached. No cache available._" sera affiché dans le log
+
+## Dépannage
+
+Le noeud remonte les erreurs HTTP sous la forme `statusCode <code>: <corps de la réponse>`.
+
+| Symptôme | Cause probable | Action |
+|---|---|---|
+| `statusCode 401` | Token invalide ou expiré | Regénérer le token sur [conso.boris.sh](https://conso.boris.sh/) et mettre à jour le noeud ou les credentials |
+| `statusCode 403` | Consentement Enedis absent/expiré, ou PRM non autorisé | Vérifier le consentement et le PRM sur votre espace Enedis / Conso API |
+| `statusCode 429` | Quota d'appels atteint | Attendre la réinitialisation quotidienne ou augmenter `options_api_daily_limit` avec prudence |
+| `token not set` | Aucun token trouvé | Renseigner le token dans le payload, les credentials, le noeud de configuration ou le champ du noeud |
+| `pointId/PRM must contain 14 digits` | PRM mal saisi | Saisir les 14 chiffres du PRM sans espace |
+| Données absentes après redémarrage | Cache en mémoire | Le cache est vidé au redémarrage, refaire un appel ou attendre le prochain cycle |
+
+Vérifiez aussi les logs Node-RED : les options `debug` du payload affichent l'URL appelée et les options de requête (token masqué).
 
 ## Développement (Docker Compose)
 
