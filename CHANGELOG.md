@@ -1,3 +1,15 @@
+## 2.0.0 - 20261103
+migration de got 13.0.0 vers got 16.2.0 (ESM uniquement, import par defaut via import() dynamique)
+prerequis Node.js >= 22.0.0 (exigence de got 16)
+prerequis Node-RED >= 4.0.0 (noeud global-config des exemples, versions 3.x non supportees)
+correction des incoherences de la 1.5.0:
+en-tetes de licence alignes sur GPL-3.0-or-later
+endpoint par defaut documente sans slash final
+priorite token/PRM documentee et fallback vers le noeud de configuration ou les champs du noeud
+description du cache et de la signature de requete corrigee
+.npmignore nettoye et workflow de publication corrige
+tests ajoutes pour la priorite token
+
 ## 1.5.0 - 20261029
 migration vers l'API Enedis Mesure synchrone V2 (arrêt de Metering data V5)
 nouveaux types: consommation_quotidienne, courbe_de_charge_consommation, puissance_conso_max_quotidienne, index_consommation, production_quotidienne, courbe_de_charge_production, index_production
@@ -8,7 +20,6 @@ header Accept, erreurs HTTP avec corps de réponse, cache cloné
 fix lecture du token et du PRM saisis directement dans le noeud
 validation locale: PRM sur 14 chiffres, dateDebut < dateFin, courbes de charge limitees a 7 jours
 normalisation des espaces (token, PRM, dates, endpoint) et du slash final de l'endpoint
-avertissement lorsque le token est stocke en clair dans flows.json
 tests automatises (node:test + mock HTTP) et workflow CI
 correction des exemples index_* (payload.contexte[].grandeur[]) et section depannage
 

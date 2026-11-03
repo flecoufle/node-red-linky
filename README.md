@@ -13,10 +13,10 @@ npm install @flecoufle/node-red-linky
 
 ## Prérequis
 
-- **Node.js**: >= 14.0.0
-- **Node-RED**: >= 0.17.0
+- **Node.js**: >= 22.0.0 (exigé par `got` 16)
+- **Node-RED**: >= 4.0.0
 - **Dépendances**:
-  - `got` 13.0.0
+  - `got` 16.2.0
 
 ## Mise en oeuvre
 - Obtenir un accès API (le token) à votre compteur: [API Conso](https://github.com/bokub/conso-api#readme) vous redirigera vers [https://conso.boris.sh](https://conso.boris.sh/)
@@ -58,7 +58,7 @@ Pour les utilisateurs des versions antérieures: **veuillez mettre à jour** pou
 | `options_timeout_send` | number | 10000 | Timeout envoi (ms) |
 | `options_timeout_response` | number | 10000 | Timeout réponse (ms) |
 | `random_delay` | number | 5000 | Délai aléatoire avant exécution (ms) |
-| `endpoint` | string | https://conso.boris.sh/api/ | Endpoint API à utiliser |
+| `endpoint` | string | https://conso.boris.sh/api | Endpoint API à utiliser |
 | `debug` | boolean | false | Afficher les détails de débogage dans les logs |
 
 ### Priorité du token et du PRM
@@ -68,6 +68,7 @@ Les valeurs sont recherchées dans cet ordre, la première valeur non vide gagna
 1. `payload.token` / `payload.pointId` (ou `payload.prm`)
 2. Credentials Node-RED du noeud
 3. Noeud de configuration `linky-api-config`
+4. Champs Token / PRM saisis directement dans le noeud
 
 ### Validation locale
 
@@ -171,6 +172,18 @@ L'ancienne API Enedis *Metering data V5* a été arrêtée en octobre 2026. Depu
 
 Voir [https://conso.boris.sh/migration-2026](https://conso.boris.sh/migration-2026).
 
+## Migration vers la version 2.0.0 (got 16.2.0)
+
+La version **2.0.0** migre de `got` 13.0.0 vers `got` **16.2.0**. Cette mise à jour est majeure :
+
+- **Node.js >= 22.0.0 est requis** : `got` 16 déclare `engines.node >= 22`. Mettez à jour Node-RED et son runtime Node.js avant d'installer cette version.
+- **Node-RED >= 4.0.0 est requis** : les exemples utilisent le nœud `global-config` introduit dans Node-RED 4.0. Les versions 3.x et antérieures ne sont plus supportées.
+- `got` 16 est **ESM uniquement** : `require('got')` n'est plus possible. Le noeud charge la dépendance via `await import('got')` et utilise son export par défaut.
+- L'export nommé `got` a été supprimé. Si vous réutilisez le code du noeud, remplacez `const { got } = await import('got')` par `const { default: got } = await import('got')`.
+- Les options utilisées par le noeud restent compatibles : `timeout.*`, `retry.limit`, `retry.errorCodes`, `responseType` et `throwHttpErrors`. Le corps de la réponse reste disponible dans `response.body` et `error.response.body`.
+
+Aucune modification des flows n'est nécessaire. Les versions Node.js antérieures à 22 ne peuvent plus charger le module.
+
 ## Limitation quotidienne des appels et système de cache
 
 Un système de limitation quotidienne est mis en place pour éviter les appels API excessifs pour une même requête identique. **Les réponses sont mises en cache**, permettant de servir les données en cache quand la limite est atteinte.
@@ -180,8 +193,7 @@ Cette fonctionnalité permet d'éviter le blocage d'IP, voir "Conseils d'utilisa
 
 - **Limite par défaut**: 3 appels par jour pour une requête identique
 - **Configuration**: La limite peut être ajustée via le paramètre `options_api_daily_limit` (en cas de besoin spécifique peut être modifiée, attention au risque de bannissement)
-- **Signature de requête**: Chaque requête est identifiée par une signature unique (hash SHA256) et **mis en cache** (cache de votre instance Node-RED dans une variable de contexte du noeud, donc reste chez vous) basée sur:
-  - Le jour de l'appel
+- **Signature de requête**: Chaque requête est identifiée par une signature unique (hash SHA256) et **mise en cache** (cache de votre instance Node-RED dans une variable de contexte du noeud, donc reste chez vous) basée sur:
   - Le type d'API canonique (`type`, alias legacy traduits)
   - Le point de livraison (`pointId`)
   - Les dates de début et fin (`dateDebut`, `dateFin`)
@@ -189,8 +201,8 @@ Cette fonctionnalité permet d'éviter le blocage d'IP, voir "Conseils d'utilisa
   - L'endpoint API (`endpoint`)
   - Les configurations de timeout
   - La limite de retry
-  
-  Donc tout sauf `debug`
+
+  Le jour de l'appel, le token, `options_api_daily_limit`, `random_delay` et `debug` ne font pas partie de la signature : le cache et les compteurs étant réinitialisés chaque jour, ils ne changent pas les données retournées par l'API.
 
 - **Réinitialisation automatique**: Le compteur se réinitialise automatiquement chaque jour à minuit UTC
 

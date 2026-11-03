@@ -24,4 +24,4 @@ Makefile
 compose.yaml
 .env.example
 .make
-.gitignore
+*.tgz

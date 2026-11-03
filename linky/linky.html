@@ -1,22 +1,18 @@
 /*
 Copyright 2023, François Lecoufle
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files(the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 <script type="text/javascript">
@@ -80,6 +76,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <dd>Enedis token.</dd>
         <dt>PRM <span class="property-type">string</span></dt>
         <dd>Point de livraison Enedis (<code>pointId</code>).</dd>
+        <dt>Config <span class="property-type">linky-api-config</span></dt>
+        <dd>Noeud de configuration optionnel fournissant le token et le PRM.</dd>
     </dl>
 
     <h3>Input</h3>
@@ -94,7 +92,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <p>
         Tous les paramètres :<br/>
 <pre><code>"type": voir les <code>types disponibles</code> ci-dessous
-"token": token défini dans le payload ou dans les propriétés du nœud
+"token": token défini dans le payload, les credentials, le noeud de configuration ou les propriétés du nœud
 "pointId": PRM (ancien nom accepté : "prm")
 "dateDebut": date de début incluse, format "YYYY-MM-DD" (ancien nom : "start")
 "dateFin": date de fin exclue, format "YYYY-MM-DD" (ancien nom : "end")
@@ -109,7 +107,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 "options_timeout_send": option got en ms (défaut 10000)
 "options_timeout_response": option got en ms (défaut 10000)
 "random_delay": délai aléatoire avant appel en ms (défaut 5000)
-"endpoint": endpoint de l'API (défaut "https://conso.boris.sh/api/")
+"endpoint": endpoint de l'API (défaut "https://conso.boris.sh/api")
 "debug": mode debug (défaut false)
 </code></pre></p>
         <p><strong>🔄 Système de Cache:</strong> Les réponses réussies sont automatiquement mises en cache. Si la limite quotidienne est atteinte pour une requête identique, la réponse en cache est retournée (statut jaune) au lieu d'une erreur.</p>
