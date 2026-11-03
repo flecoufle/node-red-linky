@@ -270,7 +270,7 @@
         "type": "global-config",
         "env": [],
         "modules": {
-            "@flecoufle/node-red-linky": "1.5.0"
+            "@flecoufle/node-red-linky": "2.0.0"
         }
     }
 ]

@@ -193,7 +193,7 @@ test('applies max power defaults and explicit options', async () => {
     assert.equal(url.searchParams.get('grandeurPhysique'), 'TOUT');
 });
 
-test('falls back to the config node then to credentials', async () => {
+test('falls back to the config node or to node credentials', async () => {
     let node = createNode({ config: 'linked-config', token: '', prm: '' });
     let result = await runNode(node, { payload: payload({ type: 'index_consommation' }) });
     assert.equal(result.err, undefined);
@@ -207,6 +207,22 @@ test('falls back to the config node then to credentials', async () => {
     result = await runNode(node, { payload: payload({ type: 'index_production' }) });
     assert.equal(result.err, undefined);
     assert.equal(lastRequest().auth, 'Bearer cred-token');
+});
+
+test('applies the documented token precedence: payload, credentials, config', async () => {
+    const node = createNode({
+        config: 'linked-config',
+        token: 'node-token',
+        __credentials: { token: 'cred-token', prm: '12345678901234' }
+    });
+
+    let result = await runNode(node, { payload: payload() });
+    assert.equal(result.err, undefined);
+    assert.equal(lastRequest().auth, 'Bearer cred-token', 'credentials take precedence over the config node');
+
+    result = await runNode(node, { payload: payload({ token: 'payload-token' }) });
+    assert.equal(result.err, undefined);
+    assert.equal(lastRequest().auth, 'Bearer payload-token', 'payload takes precedence over credentials');
 });
 
 test('validates requests locally before calling the API', async () => {

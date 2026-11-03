@@ -1,6 +1,6 @@
 {
   "name": "@flecoufle/node-red-linky",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "Récupérer de Linky les données de consommation et production d'énergie via l'API Enedis",
   "main": "linky/linky.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=22.0.0"
   },
   "contributors": [
     {
@@ -22,7 +22,7 @@
     "url": "git+https://github.com/flecoufle/node-red-linky.git"
   },
   "node-red": {
-    "version": ">=0.17.0",
+    "version": ">=4.0.0",
     "nodes": {
       "linky-api": "linky/linky.js",
       "linky-api-config": "linky/linky-config.js"
@@ -54,6 +54,6 @@
   },
   "homepage": "https://github.com/flecoufle/node-red-linky#readme",
   "dependencies": {
-    "got": "13.0.0"
+    "got": "16.2.0"
   }
 }
